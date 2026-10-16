@@ -409,6 +409,21 @@ main:focus{outline:none}
   }
   function setPlace() { var el = $("#place"); if (el) el.textContent = CV.place + ", den " + todayDE(); }
 
+  /* Portfolio-Adresse für den Lebenslauf: die Adresse der Seite, von der heruntergeladen wird (sonst die bekannte Adresse) */
+  var SITE_DEFAULT = "https://batoulalkadri.github.io/Lebenslauf/";
+  function siteUrl() {
+    try {
+      if (location.protocol === "https:" && /\.github\.io$/.test(location.hostname)) return location.origin + location.pathname.replace(/index\.html$/, "");
+    } catch (e) {}
+    return SITE_DEFAULT;
+  }
+  function webRow() {
+    var url = siteUrl(), host = url, path = "";
+    try { var u = new URL(url); host = u.host; path = u.pathname.replace(/\/$/, ""); } catch (e) {}
+    var globe = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"></path></svg>';
+    return '<a class="ci web" href="' + esc(url) + '" target="_blank" rel="noopener">' + globe + '<div><span class="wl">Portfolio online</span><span class="wu">' + esc(host) + (path ? "<br>" + esc(path) : "") + "</span></div></a>";
+  }
+
   /* Webseite rendern */
   $("#lead").textContent = CV.profile;
 
@@ -525,7 +540,8 @@ main:focus{outline:none}
     '.e{position:relative}.e::before{content:"";position:absolute;left:-22px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--paper);animation:pop .45s cubic-bezier(.3,1.6,.5,1) calc(var(--d,0s) + .05s) backwards}.e.now::before{animation:pop .45s cubic-bezier(.3,1.6,.5,1) calc(var(--d,0s) + .05s) backwards,halo 2.4s ease-out 1.5s infinite}.e.edu::before{background:var(--paper);border:2px solid var(--accent)}' +
     '.row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}.ttl{min-width:0;display:flex;flex-wrap:wrap;align-items:baseline}.ttl b{font-size:14px;font-weight:600}.org{font-size:13px;color:var(--muted)}.org::before{content:"·";margin:0 7px;color:var(--accent);font-weight:600}.date{flex:none;font-size:12px;font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}' +
     '.e ul{margin-top:3px}.e li{position:relative;padding-left:14px;font-size:13px;line-height:1.45;color:var(--ink2)}.e li::before{content:"";position:absolute;left:1px;top:.72em;width:6px;height:1.5px;background:var(--accent);opacity:.7}.sub{margin-top:1px;display:flex;flex-wrap:wrap;align-items:center;gap:3px 10px;font-size:13px;color:var(--muted)}.badge{display:inline-block;padding:1px 9px;border:1px solid var(--accent);border-radius:999px;font-size:12px;line-height:17px;font-weight:600;color:var(--accent)}' +
-    '.foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--line2);display:flex;justify-content:space-between;align-items:flex-end;gap:16px}.place{font-size:13px;color:var(--muted)}.sig{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:30px;line-height:1;color:var(--accent)}';
+    '.foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--line2);display:flex;justify-content:space-between;align-items:flex-end;gap:16px}.place{font-size:13px;color:var(--muted)}.sig{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:30px;line-height:1;color:var(--accent)}' +
+    '.cv a.web{color:var(--ink2);text-decoration:none}.cv a.web:hover .wu{text-decoration:underline}.web .wl{display:block;font-size:12px;font-weight:600;letter-spacing:.02em;color:var(--accent)}.web .wu{display:block;font-size:12px;line-height:1.35;overflow-wrap:normal}';
 
   /* Die heruntergeladene Datei setzt das Datum selbst: beim Öffnen und vor dem Drucken (PDF) */
   var CV_DATE_JS = '<script>(function(){function s(){try{var d=new Intl.DateTimeFormat("de-DE",{day:"2-digit",month:"2-digit",year:"numeric",timeZone:"Europe/Berlin"}).format(new Date()),p=document.querySelector(".place");if(p)p.textContent="Kirchheim (Teck), den "+d}catch(e){}}s();window.addEventListener("beforeprint",s)})();<\/script>';
@@ -560,7 +576,7 @@ main:focus{outline:none}
       '<div class="cv"><aside class="side">' +
       '<svg class="deco" viewBox="0 0 300 300" aria-hidden="true"><circle cx="150" cy="150" r="148" pathLength="1" style="--d:.5s"></circle><circle cx="150" cy="150" r="116" pathLength="1" style="--d:.65s"></circle><circle cx="150" cy="150" r="84" pathLength="1" style="--d:.8s"></circle></svg>' +
       '<div class="mono"><svg width="116" height="116" viewBox="0 0 116 116" role="img" aria-label="Initialen BA"><circle class="mg-bg" cx="58" cy="58" r="50"></circle><circle class="mg-outer" cx="58" cy="58" r="57"></circle><circle class="mg-ring" cx="58" cy="58" r="53" pathLength="1" transform="rotate(-90 58 58)"></circle><text class="mg-t" x="58" y="72" text-anchor="middle">BA</text></svg></div>' +
-      '<section class="a" style="--d:.25s"><h2 class="h" style="--d:.3s">Kontakt</h2><div class="ci">' + pin + "<div>Dettingerstr. 117<br>73230 Kirchheim (Teck)</div></div><div class=\"ci\">" + tel + "<div>01573 8224535</div></div><div class=\"ci\">" + mail + "<div>alkadribatoul@gmail.com</div></div></section>" +
+      '<section class="a" style="--d:.25s"><h2 class="h" style="--d:.3s">Kontakt</h2><div class="ci">' + pin + "<div>Dettingerstr. 117<br>73230 Kirchheim (Teck)</div></div><div class=\"ci\">" + tel + "<div>01573 8224535</div></div><div class=\"ci\">" + mail + "<div>alkadribatoul@gmail.com</div></div>" + webRow() + "</section>" +
       '<section class="a" style="--d:.35s"><h2 class="h" style="--d:.4s">Sprachen</h2><div class="langs">' + langs + '</div><div class="cap">Niveau nach GER, A1 bis C2</div></section>' +
       '<section class="a" style="--d:.45s"><h2 class="h" style="--d:.5s">EDV-Kenntnisse</h2><div class="chips">' + chips + "</div></section>" +
       '<section class="a" style="--d:.55s"><h2 class="h" style="--d:.6s">Weitere Kenntnisse</h2><ul class="dots">' + skills + "</ul></section>" +
